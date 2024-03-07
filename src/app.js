@@ -9,11 +9,12 @@ const userRouter = require("./routes/userRouter");
 const seedRouter = require("./routes/seedRouter");
 const { errorResponse } = require("./controllers/responsControllers");
 const teacherRouter = require("./routes/teacherRouter");
+const classRouter = require("./routes/classRoute");
 const app = express();
 
 const rateLimiter = rateLimit({
   WindowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
+  max: 100,
   message: "Too many requests from this IP. please try again",
 });
 
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/users", userRouter);
 app.use("/api/teacher", teacherRouter)
 app.use("/api/seed", seedRouter);
+app.use("/api/class", classRouter);
 
 
 
