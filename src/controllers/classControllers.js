@@ -121,10 +121,30 @@ const deleteClassById = async (req, res, next) => {
 };
 
 
+// get all classes
+const getClasses = async (req, res, next) => {
+  try {
+    const classes = await Classes.find();
+    if (!classes) {
+      throw createError(404, "class dose not exist");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "class were returned successfully",
+      payload: classes,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 module.exports = {
   addClass,
   getClassesByEmail,
   updateClassById,
   getSingleClassById,
   deleteClassById,
+  getClasses,
 };
