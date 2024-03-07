@@ -77,7 +77,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
-// delete user controller
+// update user controller
 const updateUserById = async (req, res, next) => {
   try {
     const userId = req.params.id;
