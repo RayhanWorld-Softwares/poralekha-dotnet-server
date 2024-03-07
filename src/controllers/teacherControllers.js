@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const { findWithId } = require("../services/findWithId");
 const Teacher = require("../models/teacherModel");
 
-
 // register user controller
 const createTeacher = async (req, res, next) => {
   try {
@@ -12,10 +11,7 @@ const createTeacher = async (req, res, next) => {
       req.body;
     const userExist = await Teacher.exists({ email: email });
     if (userExist) {
-      throw createError(
-        409,
-        " already form submited Please Wait "
-      );
+      throw createError(409, " already form submited Please Wait ");
     }
     if (
       !name ||
@@ -48,6 +44,24 @@ const createTeacher = async (req, res, next) => {
   }
 };
 
+// get all teacher request
+const getTeacherRequest = async (req, res, next) => {
+  try {
+    const teacherRequest = await Teacher.find();
+    if (!teacherRequest) {
+      throw createError(404, "teacher request dose not exist");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "teacher request returned successfully",
+      payload: { teacherRequest },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTeacher,
+  getTeacherRequest,
 };
