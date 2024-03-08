@@ -88,6 +88,40 @@ const updateClassById = async (req, res, next) => {
 };
 
 
+// status update class controller
+const updateClassStatusById = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    await findWithId(Classes, userId);
+    const updateOptions = { new: true, runValidators: true, context: "query" };
+    let updates = {};
+
+    // best practices
+    for (let key in req.body) {
+      if (["status"].includes(key)) {
+        updates[key] = req.body[key];
+      } 
+    }
+    // update request to db
+    const classUpdateStatus = await Classes.findByIdAndUpdate(
+      userId,
+      updates,
+      updateOptions
+    );
+    if (!classUpdateStatus) {
+      throw createError(404, "Class with this ID dose not exist ");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "status updated successfully",
+      payload: classUpdateStatus,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 // get single class controller
 const getSingleClassById = async (req, res, next) => {
   try {
@@ -147,4 +181,5 @@ module.exports = {
   getSingleClassById,
   deleteClassById,
   getClasses,
+  updateClassStatusById,
 };
