@@ -61,9 +61,44 @@ const getTeacherRequest = async (req, res, next) => {
   }
 };
 
+// status update teacher request controller
+const updateTeacherReqStatusById = async (req, res, next) => {
+  try {
+    const teacherReqId = req.params.id;
+    await findWithId(Teacher, teacherReqId);
+    const updateOptions = { new: true, runValidators: true, context: "query" };
+    let updates = {};
+
+    // best practices
+    for (let key in req.body) {
+      if (["status"].includes(key)) {
+        updates[key] = req.body[key];
+      } 
+    }
+    // update request to db
+    const teacherUpdateStatus = await Teacher.findByIdAndUpdate(
+      teacherReqId,
+      updates,
+      updateOptions
+    );
+    if (!teacherUpdateStatus) {
+      throw createError(404, "Teacher Req.. with this ID dose not exist ");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "teacher Req.. status updated successfully",
+      payload: teacherUpdateStatus,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 
 
 module.exports = {
   createTeacher,
   getTeacherRequest,
+  updateTeacherReqStatusById,
 };
