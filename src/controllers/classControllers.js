@@ -48,6 +48,26 @@ const getClassesByEmail = async (req, res, next) => {
   }
 };
 
+
+// get all class filter by status
+const getClassesByStatus = async (req, res, next) => {
+  try {
+    const status = req.params.status;
+    const allClasses = await Classes.find({status});
+    if (!allClasses) {
+      throw createError(404, `class dose not exist this status `);
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "all class returned successfully",
+      payload: { allClasses },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 // update class controller
 const updateClassById = async (req, res, next) => {
   try {
@@ -88,7 +108,7 @@ const updateClassById = async (req, res, next) => {
 };
 
 
-// status update class controller
+//  update class controller
 const updateClassStatusById = async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -182,4 +202,5 @@ module.exports = {
   deleteClassById,
   getClasses,
   updateClassStatusById,
+  getClassesByStatus,
 };

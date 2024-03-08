@@ -7,7 +7,7 @@ const Teacher = require("../models/teacherModel");
 // register user controller
 const createTeacher = async (req, res, next) => {
   try {
-    const { name, title, email, image, experience, category, status } =
+    const { name, title, email, image, experience, category, status, userId } =
       req.body;
     const userExist = await Teacher.exists({ email: email });
     if (userExist) {
@@ -20,7 +20,8 @@ const createTeacher = async (req, res, next) => {
       !image ||
       !experience ||
       !category ||
-      !status
+      !status ||
+      !userId
     ) {
       throw createError(404, " field is requier please try again ");
     }
@@ -33,6 +34,7 @@ const createTeacher = async (req, res, next) => {
       experience,
       category,
       status,
+      userId
     });
     return successResponse(res, {
       statusCode: 200,
