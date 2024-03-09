@@ -10,6 +10,7 @@ const seedRouter = require("./routes/seedRouter");
 const { errorResponse } = require("./controllers/responsControllers");
 const teacherRouter = require("./routes/teacherRouter");
 const classRouter = require("./routes/classRoute");
+const classFeedbackRouter = require("./routes/classFeedbackRoute");
 const app = express();
 
 const rateLimiter = rateLimit({
@@ -31,6 +32,7 @@ app.use("/api/users", userRouter);
 app.use("/api/teacher", teacherRouter)
 app.use("/api/seed", seedRouter);
 app.use("/api/class", classRouter);
+app.use("/api/feedback", classFeedbackRouter);
 
 
 
