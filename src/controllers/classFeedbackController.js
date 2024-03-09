@@ -26,6 +26,25 @@ const feedback = async (req, res, next) => {
   }
 };
 
+
+// get all classes
+const getClassFeedback = async (req, res, next) => {
+  try {
+    const feedbacks = await ClassFeedback.find();
+    if (!feedbacks) {
+      throw createError(404, "class feedback dose not exist");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "class  feedback returned successfully",
+      payload: feedbacks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   feedback,
+  getClassFeedback,
 };

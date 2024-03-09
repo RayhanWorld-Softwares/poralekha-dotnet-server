@@ -7,8 +7,16 @@ const { findWithId } = require("../services/findWithId");
 // get all users
 const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
-    if (!users) {
+    let query = {};
+    if (req.query.email) {
+      query.email = { $regex: new RegExp(req.query.email, "i") };
+    }
+    if (req.query.name) {
+      query.name = { $regex: new RegExp(req.query.name, "i") };
+    }
+
+    const users = await User.find(query);
+    if (!users || users.length === 0) {
       throw createError(404, "users dose not exist");
     }
     return successResponse(res, {
@@ -25,7 +33,7 @@ const getUsers = async (req, res, next) => {
 const getUserByEmail = async (req, res, next) => {
   try {
     const email = req.params.email;
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
     if (!user) {
       throw createError(404, `user dose not exist this email `);
     }
@@ -96,10 +104,7 @@ const updateUserById = async (req, res, next) => {
       if (["name", "role"].includes(key)) {
         updates[key] = req.body[key];
       } else if (["email"].includes(key)) {
-        throw createError(
-          400,
-          "email can not be updated "
-        );
+        throw createError(400, "email can not be updated ");
       }
     }
 
