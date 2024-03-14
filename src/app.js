@@ -1,6 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
-const cors = require('cors');
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const xssClean = require("xss-clean");
@@ -12,6 +12,7 @@ const teacherRouter = require("./routes/teacherRouter");
 const classRouter = require("./routes/classRoute");
 const classFeedbackRouter = require("./routes/classFeedbackRoute");
 const app = express();
+const orderRouter = require("./routes/orderRoute");
 
 const rateLimiter = rateLimit({
   WindowMs: 1 * 60 * 1000, // 1 minute
@@ -19,22 +20,21 @@ const rateLimiter = rateLimit({
   message: "Too many requests from this IP. please try again",
 });
 
-// router middleware 
-app.use(cors())
+// router middleware
+app.use(cors());
 app.use(rateLimiter);
 app.use(xssClean());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// router middleware 
+// router middleware
 app.use("/api/users", userRouter);
-app.use("/api/teacher", teacherRouter)
+app.use("/api/teacher", teacherRouter);
 app.use("/api/seed", seedRouter);
 app.use("/api/class", classRouter);
 app.use("/api/feedback", classFeedbackRouter);
-
-
+app.use("/api/order", orderRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({
