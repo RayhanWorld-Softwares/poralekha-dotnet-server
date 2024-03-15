@@ -3,7 +3,7 @@ const { successResponse } = require("./responsControllers");
 const mongoose = require("mongoose");
 const Assignment = require("../models/assignmentModel");
 
-// register user controller
+// create assignment controller
 const createAssignment = async (req, res, next) => {
   try {
     const { title, endDate, description } = req.body;
@@ -24,6 +24,28 @@ const createAssignment = async (req, res, next) => {
   }
 };
 
+
+// get all teacher request
+const getAssignment = async (req, res, next) => {
+  try {
+    const assignment = await Assignment.find();
+    if (!assignment) {
+      throw createError(404, "assignment dose not exist");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "assignment returned successfully",
+      payload: { assignment },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
 module.exports = {
   createAssignment,
+  getAssignment,
 };
