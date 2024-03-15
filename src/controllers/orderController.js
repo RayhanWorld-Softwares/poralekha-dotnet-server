@@ -8,7 +8,7 @@ const SSLCommerzPayment = require("sslcommerz-lts");
 const Order = require("../models/orderModel");
 const { store_id, store_passwd, is_live } = require("../secret");
 
-// register user controller
+// create order controller
 const createOrder = async (req, res, next) => {
   try {
     const { userId, email, name, classId } = req.body;
@@ -63,6 +63,7 @@ const createOrder = async (req, res, next) => {
       classTitle: classInfo?.title,
       price: classInfo?.price,
       teacherName: classInfo?.name,
+      image: classInfo?.image,
     };
     const result = await Order.create(orderData);
     console.log("Redirecting to: ", GatewayPageURL);
@@ -71,59 +72,76 @@ const createOrder = async (req, res, next) => {
   }
 };
 
-
 // payment POST controller payment/success/:tranId
 const payment = async (req, res, next) => {
-    try {
-        const transactionId = req.params.tranId;
-        // Find the order by transactionId
-        const order = await Order.findOne({ transactionId });
-        if (!order) {
-            throw createError(404, "Order with this transaction ID does not exist");
-        }
-
-        // Update the paidStatus to true
-        order.paidStatus = true;
-        await order.save();
-
-		if(order.paidStatus === true){
-			res.redirect(`http://localhost:5173/payment/success/${transactionId}`)
-		}
-
-        return successResponse(res, {
-            statusCode: 200,
-            message: "Paid status updated to true",
-        });
-    } catch (error) {
-        next(error);
+  try {
+    const transactionId = req.params.tranId;
+    // Find the order by transactionId
+    const order = await Order.findOne({ transactionId });
+    if (!order) {
+      throw createError(404, "Order with this transaction ID does not exist");
     }
+
+    // Update the paidStatus to true
+    order.paidStatus = true;
+    await order.save();
+
+    if (order.paidStatus === true) {
+      res.redirect(
+        "http://localhost:5173/student-dashboard/my-enroll-class"
+      );
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Paid status updated to true",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const paymentFail = async (req, res, next) => {
+  try {
+    const transactionId = req.params.tranId;
+    const order = await Order.findOne({ transactionId });
+    const result = await Order.deleteOne({ transactionId });
+    if (result.deletedCount) {
+      res.redirect(`http://localhost:5173/payment/fail/${transactionId}`);
+    }
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "order was deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 
-const paymentFail = async (req, res, next) => {
-	try {
-		const transactionId = req.params.tranId;
-		const order = await Order.findOne({transactionId});
-		const result = await Order.deleteOne({ transactionId});
-		if(result.deletedCount){
-			res.redirect(`http://localhost:5173/payment/fail/${transactionId}`)
-		}
+// get single user controller
+const getEnrolledClassByEmail = async (req, res, next) => {
+  try {
+    const email = req.params.email;
+    const enrolledClass = await Order.find({ email });
+    if (!enrolledClass) {
+      throw createError(404, `student dose not enrolled this email `);
+    }
 
-		return successResponse(res, {
-		  statusCode: 200,
-		  message: "order was deleted successfully",
-		});
-	  } catch (error) {
-		next(error);
-	  }
-}
-
-
-
+    return successResponse(res, {
+      statusCode: 200,
+      message: "enrolledClass were returned successfully",
+      payload: enrolledClass,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 module.exports = {
   createOrder,
   payment,
-  paymentFail
+  paymentFail,
+  getEnrolledClassByEmail,
 };
