@@ -13,6 +13,7 @@ const classRouter = require("./routes/classRoute");
 const classFeedbackRouter = require("./routes/classFeedbackRoute");
 const app = express();
 const orderRouter = require("./routes/orderRoute");
+const assignmentRouter = require("./routes/assignmentRouter");
 
 const rateLimiter = rateLimit({
   WindowMs: 1 * 60 * 1000, // 1 minute
@@ -35,6 +36,7 @@ app.use("/api/seed", seedRouter);
 app.use("/api/class", classRouter);
 app.use("/api/feedback", classFeedbackRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/assignment", assignmentRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({
