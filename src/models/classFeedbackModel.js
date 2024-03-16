@@ -19,6 +19,10 @@ const classFeedbackSchema = new Schema(
       type: String,
       require: true,
     },
+    rating: {
+      type: Number,
+      require: true,
+    },
   },
   { timestamps: true }
 );

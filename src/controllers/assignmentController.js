@@ -18,12 +18,10 @@ const createAssignment = async (req, res, next) => {
       message: "assignment created successfully",
       payload: { assignment },
     });
-	
   } catch (error) {
     next(error);
   }
 };
-
 
 // get all teacher request
 const getAssignment = async (req, res, next) => {
@@ -35,15 +33,12 @@ const getAssignment = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: "assignment returned successfully",
-      payload: { assignment },
+      payload: assignment,
     });
   } catch (error) {
     next(error);
   }
 };
-
-
-
 
 module.exports = {
   createAssignment,

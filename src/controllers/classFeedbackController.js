@@ -6,8 +6,8 @@ const ClassFeedback = require("../models/classFeedbackModel");
 // class feedback controller from admin
 const feedback = async (req, res, next) => {
   try {
-    const { userName, title, feedbackText, image } = req.body;
-    if (!userName || !title || !feedbackText || !image) {
+    const { userName, title, feedbackText, image, rating } = req.body;
+    if (!userName || !title || !feedbackText || !image || !rating) {
       throw createError(404, " field is requier please try again ");
     }
     const newFeedback = await ClassFeedback.insertMany({
@@ -15,11 +15,12 @@ const feedback = async (req, res, next) => {
       title,
       feedbackText,
       image,
+      rating
     });
     return successResponse(res, {
       statusCode: 200,
       message: "feedback added successfully",
-      payload: { newFeedback },
+      payload: newFeedback ,
     });
   } catch (error) {
     next(error);

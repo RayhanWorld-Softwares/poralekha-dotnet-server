@@ -50,6 +50,7 @@ const createTeacher = async (req, res, next) => {
 const getTeacherRequest = async (req, res, next) => {
   try {
     const teacherRequest = await Teacher.find();
+    console.log(53, {teacherRequest});
     if (!teacherRequest) {
       throw createError(404, "teacher request dose not exist");
     }
@@ -57,6 +58,24 @@ const getTeacherRequest = async (req, res, next) => {
       statusCode: 200,
       message: "teacher request returned successfully",
       payload: { teacherRequest },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get all teacher request By Email
+const getTeacherRequestByEmail = async (req, res, next) => {
+  try {
+    const email = req.params.email
+    const request = await Teacher.find({email});
+    if (!request) {
+      throw createError(404, "teacher request dose not exist");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "teacher request returned successfully",
+      payload:  request ,
     });
   } catch (error) {
     next(error);
@@ -97,10 +116,9 @@ const updateTeacherReqStatusById = async (req, res, next) => {
 };
 
 
-
-
 module.exports = {
   createTeacher,
   getTeacherRequest,
   updateTeacherReqStatusById,
+  getTeacherRequestByEmail
 };

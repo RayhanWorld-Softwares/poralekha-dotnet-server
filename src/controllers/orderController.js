@@ -87,9 +87,7 @@ const payment = async (req, res, next) => {
     await order.save();
 
     if (order.paidStatus === true) {
-      res.redirect(
-        "http://localhost:5173/student-dashboard/my-enroll-class"
-      );
+      res.redirect("http://localhost:5173/student-dashboard/my-enroll-class");
     }
     return successResponse(res, {
       statusCode: 200,
@@ -118,7 +116,6 @@ const paymentFail = async (req, res, next) => {
   }
 };
 
-
 // get single user controller
 const getEnrolledClassByEmail = async (req, res, next) => {
   try {
@@ -138,10 +135,29 @@ const getEnrolledClassByEmail = async (req, res, next) => {
   }
 };
 
+// get single user controller
+const getEnrolledClassById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const order = await Order.findById({ _id: id });
+    if (!order) {
+      throw createError(404, `student dose not enrolled this id `);
+    }
+    const { classTitle } = order;
+    return successResponse(res, {
+      statusCode: 200,
+      message: "user was deleted successfully",
+      payload: { classTitle },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createOrder,
   payment,
   paymentFail,
   getEnrolledClassByEmail,
+  getEnrolledClassById,
 };
