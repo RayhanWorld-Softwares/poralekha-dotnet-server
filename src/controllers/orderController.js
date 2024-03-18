@@ -143,11 +143,11 @@ const getEnrolledClassById = async (req, res, next) => {
     if (!order) {
       throw createError(404, `student dose not enrolled this id `);
     }
-    const { classTitle } = order;
+    const { classTitle, name } = order;
     return successResponse(res, {
       statusCode: 200,
       message: "user was deleted successfully",
-      payload: { classTitle },
+      payload: { classTitle, name },
     });
   } catch (error) {
     next(error);
