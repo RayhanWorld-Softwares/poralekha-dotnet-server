@@ -14,6 +14,9 @@ const classFeedbackRouter = require("./routes/classFeedbackRoute");
 const app = express();
 const orderRouter = require("./routes/orderRoute");
 const assignmentRouter = require("./routes/assignmentRouter");
+const videoRouter = require("./routes/videoRouter");
+const signatureRouter = require("./routes/sign-uploadRouter");
+const classModuleRouter = require("./routes/classModuleRouter");
 
 const rateLimiter = rateLimit({
   WindowMs: 1 * 60 * 1000, // 1 minute
@@ -37,6 +40,12 @@ app.use("/api/class", classRouter);
 app.use("/api/feedback", classFeedbackRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/assignment", assignmentRouter);
+app.use("/api/classModule", classModuleRouter);
+
+
+// file upload router
+app.use("/api/videos", videoRouter)
+app.use("/api/sign-upload", signatureRouter)
 
 app.get("/", (req, res) => {
   res.status(200).send({
