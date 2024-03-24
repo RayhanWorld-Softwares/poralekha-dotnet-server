@@ -5,25 +5,29 @@ const Video = require("../models/videoModel");
 // create video controller
 const createVideo = async (req, res, next) => {
   try {
-    const { moduleId, title, imgUrl, videoUrl } = req.body;
+    const { moduleId, title, imgUrl, videoUrl, pdfUrl } = req.body;
+    console.log(9, { moduleId, title, imgUrl, videoUrl, pdfUrl });
 
-    if (!moduleId || !title || !imgUrl || !videoUrl) {
-      throw createError(404, `imgUrl & videoUrl filed is requird`);
+    if (!moduleId || !title || !imgUrl || !videoUrl || !pdfUrl) {
+      throw createError(404, `imgUrl & videoUrl pdfUrl filed is requird`);
     }
 
     // Fetch the maximum moduleSerial value from existing videos
-    const maxModuleSerialVideo = await Video.findOne({moduleId})
+    const maxModuleSerialVideo = await Video.findOne({ moduleId })
       .sort({ moduleSerial: -1 })
       .limit(1);
 
     // Calculate the next moduleSerial value
-    const nextModuleSerial = maxModuleSerialVideo ? maxModuleSerialVideo.moduleSerial + 1 : 1;
+    const nextModuleSerial = maxModuleSerialVideo
+      ? maxModuleSerialVideo.moduleSerial + 1
+      : 1;
 
     const newVideo = await Video.insertMany({
       moduleId,
       title,
       imgUrl,
       videoUrl,
+      pdfUrl,
       moduleSerial: nextModuleSerial,
     });
     return successResponse(res, {

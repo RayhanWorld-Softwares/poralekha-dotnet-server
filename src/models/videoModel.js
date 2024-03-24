@@ -18,6 +18,10 @@ const videoSchema = new Schema(
       type: String,
       require: true,
     },
+    pdfUrl: {
+      type: String,
+      require: true,
+    },
     moduleSerial: {
       type: Number,
       required: true,
