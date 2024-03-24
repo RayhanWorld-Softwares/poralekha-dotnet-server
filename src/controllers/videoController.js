@@ -6,7 +6,6 @@ const Video = require("../models/videoModel");
 const createVideo = async (req, res, next) => {
   try {
     const { moduleId, title, imgUrl, videoUrl } = req.body;
-    console.log(9, req.body);
 
     if (!moduleId || !title || !imgUrl || !videoUrl) {
       throw createError(404, `imgUrl & videoUrl filed is requird`);
