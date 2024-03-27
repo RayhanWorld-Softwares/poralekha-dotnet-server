@@ -17,6 +17,7 @@ const assignmentRouter = require("./routes/assignmentRouter");
 const videoRouter = require("./routes/videoRouter");
 const signatureRouter = require("./routes/sign-uploadRouter");
 const classModuleRouter = require("./routes/classModuleRouter");
+const quizRouter = require("./routes/quizRouter");
 
 const rateLimiter = rateLimit({
   WindowMs: 1 * 60 * 1000, // 1 minute
@@ -41,6 +42,7 @@ app.use("/api/feedback", classFeedbackRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/assignment", assignmentRouter);
 app.use("/api/classModule", classModuleRouter);
+app.use("/api/quiz", quizRouter);
 
 
 // file upload router
